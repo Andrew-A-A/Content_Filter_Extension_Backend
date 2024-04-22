@@ -23,6 +23,8 @@ from transformers import DistilBertTokenizer
 #region Load the models
 mobileNet_image_model = tf.saved_model.load("models/MobileNetV3")
 
+resNet_image_model=tf.saved_model.load("models/resnet")
+
 efficientNet_image_model = tf.saved_model.load("models/EfficientNet")
 
 distilBert_text_model=tf.saved_model.load('models/distilbert_classifier')
@@ -57,11 +59,16 @@ def getImagesList():
                 predict_image = tf.expand_dims(predict_image, axis=0)
                 # Get the prediction from the MobileNetV3 model
                 prediction_mobileNet=mobileNet_image_model.signatures["serving_default"](predict_image)
+                #resnet_input=keras.applications.resnet.preprocess_input(predict_image)
+                #resnet_prediction=resNet_image_model.signatures["serving_default"](predict_image)
                 # Apply one more preprocessing step for the efficientNet input image
                 eff_input=tf.keras.applications.efficientnet_v2.preprocess_input(predict_image)
                 prediction_efficientNet = efficientNet_image_model.signatures["serving_default"](eff_input)
                 # Map the prediction to the correct class (Binary)
+                #print(resnet_prediction)
+                #print(prediction_mobileNet)
                 non_violence,violence=prediction_mobileNet['dense'].numpy()[0]
+                #non_violence,violence=resnet_prediction['dense'].numpy()[0]
                 if non_violence<violence:
                     prediction="Violence"
                 else:
@@ -91,7 +98,7 @@ def getStringsList():
                     continue
                 # Preprocess the text and predict the toxicity
                 text=pipelineText(text)
-                if(len(text)<=1):
+                if(len(text)<=1) or text=="null" or (text in text_prediction_dict):
                     continue
                 print('==============================')
                 print(text)
