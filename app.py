@@ -27,6 +27,8 @@ mobileNet_image_model = tf.saved_model.load("models/MobileNetV3")
 
 efficientNet_image_model = tf.saved_model.load("models/EfficientNet")
 
+convNextBase_image_model=tf.saved_model.load("models/convNeXtBase")
+
 distilBert_text_model=tf.saved_model.load('models/distilbert_classifier')
 #endregion
 
@@ -63,6 +65,8 @@ def getImagesList():
                 #resnet_prediction=resNet_image_model.signatures["serving_default"](predict_image)
                 # Apply one more preprocessing step for the efficientNet input image
                 eff_input=tf.keras.applications.efficientnet_v2.preprocess_input(predict_image)
+               # prediction_convNext=convNextBase_image_model.signatures["serving_default"](predict_image)
+                #print(prediction_convNext)
                 prediction_efficientNet = efficientNet_image_model.signatures["serving_default"](eff_input)
                 # Map the prediction to the correct class (Binary)
                 #print(resnet_prediction)
@@ -76,6 +80,7 @@ def getImagesList():
                 binary_predictions[image]=prediction
                 # Map the prediction to the correct class (Multi-class)
                 accident, damaged_buildings, fire, normal =prediction_efficientNet['output_0'].numpy()[0]
+                #accident, damaged_buildings, fire, normal =prediction_convNext['output_0'].numpy()[0]
                 predictions_dict={"fire":fire,"accident":accident,'normal':normal,"damaged_buildings":damaged_buildings}
                 multi_class_predictions[image]=max(predictions_dict,key=predictions_dict.get)
             # Return the both multi-class and binary predictions to the frontend
