@@ -23,7 +23,7 @@ from transformers import DistilBertTokenizer
 #region Load the models
 mobileNet_image_model = tf.saved_model.load("models/MobileNetV3")
 
-resNet_image_model=tf.saved_model.load("models/resnet")
+#resNet_image_model=tf.saved_model.load("models/resnet")
 
 efficientNet_image_model = tf.saved_model.load("models/EfficientNet")
 
@@ -100,21 +100,21 @@ def getStringsList():
                 text=pipelineText(text)
                 if(len(text)<=1) or text=="null" or (text in text_prediction_dict):
                     continue
-                print('==============================')
-                print(text)
-                print(len(text))
+                # print('==============================')
+                # print(text)
+                # print(len(text))
                 padding_mask,token_ids=preprocess_text_list([text])
-                print('==============================')
+                # print('==============================')
 
                 predictions=distilBert_text_model.signatures["serving_default"](padding_mask=padding_mask,
                                                                                 token_ids=tf.constant(token_ids))
-                print(predictions)
+                # print(predictions)
                 non_toxic,toxic=predictions['output_0'].numpy()[0]
                 if non_toxic>toxic:
-                    print("Non Toxic")
+                    # print("Non Toxic")
                     text_prediction_dict[text]='Non Toxic'
                 else:
-                    print("Toxic")
+                    # print("Toxic")
                     text_prediction_dict[text]='Toxic'
             return jsonify( {"TextPrediction":text_prediction_dict})
         return jsonify({"Error":"No data recived"})
