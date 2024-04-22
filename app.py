@@ -27,7 +27,7 @@ mobileNet_image_model = tf.saved_model.load("models/MobileNetV3")
 
 efficientNet_image_model = tf.saved_model.load("models/EfficientNet")
 
-convNextBase_image_model=tf.saved_model.load("models/convNeXtBase")
+#convNextBase_image_model=tf.saved_model.load("models/convNeXtBase")
 
 distilBert_text_model=tf.saved_model.load('models/distilbert_classifier')
 #endregion

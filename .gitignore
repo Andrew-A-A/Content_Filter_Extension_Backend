@@ -6,3 +6,4 @@ __pycache__/app.cpython-311.pyc
 freeze
 reqs.txt
 models/ConvNeXtBase
+.vercel
