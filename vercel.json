@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "output": "output",
+    "outputDirectory": "output",
     "builds": [
         {
             "src": "*.py",
