@@ -40,7 +40,12 @@ pip install -r requirements.txt
 
 After setting up the virtual environment and installing the necessary packages, you can run the Flask application. By default, the Flask development server will run on `http://127.0.0.1:5000/`.
 
-To start the server in debug mode, run the following command:
+- To start the server, run the following command:
+
+```
+flask --app app run
+```
+- To start in debug mode:
 
 ```
 flask --app app run --debug 
