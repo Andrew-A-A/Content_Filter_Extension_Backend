@@ -1,6 +1,6 @@
 import tensorflow as tf
 import requests
-import ImagePreproessor 
+import ImagePreprocessor 
 from PIL import Image
 import io
 
@@ -30,7 +30,7 @@ def FillBinaryDict(request):
                     continue
                 # Load the image from the url
                 response = requests.get(image)
-                predict_image=ImagePreproessor.ImgPreprocess(response)
+                predict_image=ImagePreprocessor.ImgPreprocess(response)
                 # Get the prediction from the MobileNetV3 model
                 binaryPrediction=mobileNetV3.signatures["serving_default"](predict_image)
                 # Map the prediction to the correct class (Binary)
@@ -49,7 +49,7 @@ def FillMultiClassDict(request):
                     continue
                 # Load the image from the url
                 response = requests.get(image)
-                predict_image=ImagePreproessor.ImgPreprocess(response,True)
+                predict_image=ImagePreprocessor.ImgPreprocess(response,True)
                 multiClassPrediction = efficientNet.signatures["serving_default"](predict_image)
                 # Map the prediction to the correct class
                 accident, damaged_buildings, fire, normal =multiClassPrediction['output_0'].numpy()[0]
