@@ -8,11 +8,11 @@ mobileNetV3 = tf.saved_model.load("models/MobileNetV3")
 
 efficientNet = tf.saved_model.load("models/EfficientNet")
 
-imagesList=[]
+__imagesList=[]
 binaryPredictions={}
 multiClassPredictions={}
 
-def GetImageRequest(request):
+def __GetImageRequest(request):
     # Check if method recived is correct
     if request.method =="POST":
         # Check if recived request contains images list
@@ -20,12 +20,12 @@ def GetImageRequest(request):
             # Get images urls as one string
             images=request.form['images']
             # Split the string to get the list of images
-            imagesList=images.split(',')
-            return imagesList
+            __imagesList=images.split(',')
+            return __imagesList
 
 def FillBinaryDict(request):
-            imagesList=GetImageRequest(request)
-            for image in imagesList:
+            __imagesList=__GetImageRequest(request)
+            for image in __imagesList:
                 if image=="":
                     continue
                 # Load the image from the url
@@ -43,8 +43,8 @@ def FillBinaryDict(request):
             return binaryPredictions
 
 def FillMultiClassDict(request):
-            imagesList=GetImageRequest(request)
-            for image in imagesList:
+            __imagesList=__GetImageRequest(request)
+            for image in __imagesList:
                 if image=="":
                     continue
                 # Load the image from the url

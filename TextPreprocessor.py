@@ -11,18 +11,18 @@ def pipelineText(text):
     slang=slang.to_dict()
     inner_dict=slang['expansion']
     slang = {acronym: meaning for acronym, meaning in inner_dict.items()}
-    text= remove_url(text)
-    text= remove_days_months(text)
-    text= remove_unicode_variations(text)
-    text= remove_mentions(text)
-    text= remove_hashtags(text)
-    text= remove_special_characters(text)
-    text= remove_redundant_characters_in_row(text)
-    text= replace_acronyms_with_meanings(text,slang)
-    text= remove_numbers(text)
+    text= __remove_url(text)
+    text= __remove_days_months(text)
+    text= __remove_unicode_variations(text)
+    text= __remove_mentions(text)
+    text= __remove_hashtags(text)
+    text= __remove_special_characters(text)
+    text= __remove_redundant_characters_in_row(text)
+    text= __replace_acronyms_with_meanings(text,slang)
+    text= __remove_numbers(text)
     text= text.lower()
     return text
-def replace_acronyms_with_meanings(text, acronym_dict):
+def __replace_acronyms_with_meanings(text, acronym_dict):
     def replace_acronym(match):
         acronym = match.group(0)
         meaning = acronym_dict.get(acronym.lower(), acronym)
@@ -32,7 +32,7 @@ def replace_acronyms_with_meanings(text, acronym_dict):
     if isinstance(text, str):
         updated_text = re.sub(pattern, replace_acronym, text, flags=re.IGNORECASE)
         return updated_text
-def remove_redundant_characters_in_row(row):
+def __remove_redundant_characters_in_row(row):
     if isinstance(row, str):
         words = row.split()
         cleaned_words = []
@@ -54,27 +54,27 @@ def remove_redundant_characters_in_row(row):
             cleaned_words.append(cleaned_word)
 
         return " ".join(cleaned_words)
-def remove_unicode_variations(input_string):
+def __remove_unicode_variations(input_string):
     if isinstance(input_string, str):
         normalized_string = unicodedata.normalize('NFKD', input_string)
         ascii_string = normalized_string.encode('ascii', 'ignore').decode('utf-8')
         return ascii_string
-def remove_numbers(text):
+def __remove_numbers(text):
     if isinstance(text, str):
         rem = str.maketrans('', '', digits)
         res = text.translate(rem)
         return res
-def remove_special_characters(text):
+def __remove_special_characters(text):
     if isinstance(text, str):
         special_characters = r'[!@#$%*&()-+\n,.?/:;{}\'"><=`-]'
         pattern = re.compile(special_characters)
         return pattern.sub('', text)
-def remove_url(text):
+def __remove_url(text):
     if isinstance(text, str):
         url_pattern = re.compile(r'https?://\S+|www\.\S+')
         text=url_pattern.sub('', text)
     return text
-def remove_days_months(text):
+def __remove_days_months(text):
     if isinstance(text, str):
         day_names_pattern = r'\b(?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)\b'
         day_names = r'\b(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b'
@@ -83,7 +83,7 @@ def remove_days_months(text):
         combined_pattern = f'{day_names_pattern}|{month_names_pattern}|{day_names}|{month_names}'
         result = re.sub(combined_pattern, '', text)
         return result
-def remove_hashtags(text):
+def __remove_hashtags(text):
     if isinstance(text, str):
         forms = [r'#\w+',  # form1(# followed by letters whether small or capital and/or numbers)
                  r'#([A-Z][a-z]+)([A-Z][a-z]+)'
@@ -93,7 +93,7 @@ def remove_hashtags(text):
         pattern = re.compile(all_forms)
         return pattern.sub('', text)
     return text
-def remove_mentions(text):
+def __remove_mentions(text):
 
     if isinstance(text, str):
         forms = [r'@[A-Za-z0-9]+',  # form1
